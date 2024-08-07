@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commande en ligne - Pointe-Noire</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom CSS */
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .container h1 {
+            color: #2c3e50;
+        }
+        #restaurant-list .card {
+            margin-bottom: 20px;
+        }
+        footer {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Restaurants Pointe-Noire</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Restaurants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Commandes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1 class="text-center text-4xl font-bold mb-8">Bienvenue sur la plateforme de commande en ligne</h1>
+        <p class="text-center text-lg mb-5">Facilitez vos commandes en ligne dans les meilleurs restaurants de Pointe-Noire.</p>
+
+        <!-- Search Bar -->
+        <div class="row mb-4">
+            <div class="col-md-8 offset-md-2">
+                <input type="text" class="form-control" id="search-bar" placeholder="Rechercher un restaurant...">
+            </div>
+        </div>
+
+        <!-- Restaurant List -->
+        <div id="restaurant-list" class="row">
+            <!-- Les cartes des restaurants seront injectées ici par JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 Commande en ligne - Pointe-Noire. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Custom JS
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const restaurantList = document.getElementById("restaurant-list");
+            const searchBar = document.getElementById("search-bar");
+
+            // Sample data for restaurants
+            const restaurants = [
+                { 
+                    name: "La Citronnelle", 
+                    description: "La Citronnelle est une pâtisserie artisanale créer en 1999 à Pointe-noire. Après la guerre de 1998 à Brazzaville, le CEO de la mandarine pensa à créer une deuxième pâtisserie dans la capitale économique. Créateurs de goûts, toujours à la recherche de nouvelles sensations gustatives, la citronnelle a une vitrine variée de produits: viennoiseries, pâtisseries, chocolats, macarons, glaces, crêpes, fast-food variés tels que sandwiches, burgers, salades, pizza, galettes bretonnes, omelettes ... La citronnelle est un endroit convivial, familial, idéal pour vos rencontres professionnelles ou amicales. Une équipe professionnelle vous attend afin de bien vous servir. Merci, à très vite!", 
+                    image: "https://via.placeholder.com/150",
+                    menu: ["Viennoiseries", "Pâtisseries", "Chocolats", "Macarons", "Glaces", "Crêpes", "Fast-food"]
+                },
+                { 
+                    name: "L’Arbalète", 
+                    description: "Un petit bar pour boire l’apéritif, deux petites salles boisées à la décoration délicieusement rétro pour passer à table... et tout y est: une belle carte de cuisine française traditionnelle où se côtoient cailles, magrets, foie gras, cuisses de grenouilles ou sole aux amandes. Autre spécialité de la maison: le gratin de papaye, un véritable délice. A ce ravissement s'ajoute une carte des vins avenante et la gentillesse des propriétaires. L’Arbalète mérite sa réputation d'être l'un des meilleurs restaurants de Pointe-Noire, sans pour autant casser sa tirelire.", 
+                    image: "https://via.placeholder.com/150",
+                    menu: ["Cailles", "Magrets", "Foie gras", "Cuisses de grenouilles", "Sole aux amandes", "Gratin de papaye"]
+                },
+                { 
+                    name: "La Voile Blanche", 
+                    description: "De par sa situation et sa déco chic, la Voile Blanche a très vite fait sa place à Pointe-Noire. Une immense terrasse abritée accueille un grand bar, plusieurs coins canapés et un espace restaurant. La vue sur l'océan fait de ce lieu un endroit particulièrement plaisant. La carte des cocktails est intéressante, ainsi que celle du restaurant. Cette dernière met à l'honneur les produits de la mer, comme la langouste grillée, le poisson frais et les crevettes. Les plats sont bien préparés et la présentation soignée. Une adresse à découvrir.", 
+                    image: "https://via.placeholder.com/150",
+                    menu: ["Langouste grillée", "Poisson frais", "Crevettes"]
+                }
+            ];
+
+            // Function to display restaurants
+            function displayRestaurants(restaurants) {
+                restaurantList.innerHTML = "";
+                restaurants.forEach(restaurant => {
+                    const card = document.createElement("div");
+                    card.className = "col-md-4";
+                    card.innerHTML = `
+                        <div class="card">
+                            <img src="${restaurant.image}" class="card-img-top" alt="${restaurant.name}">
+                            <div class="card-body">
+                                <h5 class="card-title">${restaurant.name}</h5>
+                                <p class="card-text">${restaurant.description}</p>
+                                <ul class="list-group list-group-flush">
+                                    ${restaurant.menu.map(item => `<li class="list-group-item">${item}</li>`).join('')}
+                                </ul>
+                                <a href="#" class="btn btn-primary mt-3">Commander</a>
+                            </div>
+                        </div>
+                    `;
+                    restaurantList.appendChild(card);
+                });
+            }
+
+            // Display all restaurants initially
+            displayRestaurants(restaurants);
+
+            // Filter restaurants based on search input
+            searchBar.addEventListener("input", function() {
+                const query = searchBar.value.toLowerCase();
+                const filteredRestaurants = restaurants.filter(restaurant =>
+                    restaurant.name.toLowerCase().includes(query) ||
+                    restaurant.description.toLowerCase().includes(query)
+                );
+                displayRestaurants(filteredRestaurants);
+            });
+        });
+    </script>
+</body>
+</html>
