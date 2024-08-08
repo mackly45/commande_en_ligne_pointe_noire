@@ -1,41 +1,156 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commande en ligne - Pointe-Noire</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
     <style>
         /* Custom CSS */
         body {
             font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
         }
+
         .navbar-brand {
             font-weight: bold;
         }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: url('https://via.placeholder.com/1920x600') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
         .container h1 {
             color: #2c3e50;
         }
+
         #restaurant-list .card {
             margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
+
+        #restaurant-list .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
         footer {
-            background-color: #f8f9fa;
+            background-color: #2c3e50;
+            color: #fff;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding-right: 40px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+        }
+
+        .modal-body img {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .modal-body ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-body li {
+            background: #f4f4f9;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .modal-body .menu-item {
+            font-weight: bold;
+        }
+
+        .order-summary {
+            margin-top: 20px;
+        }
+
+        .order-summary ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-summary li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .order-summary li:last-child {
+            border-bottom: none;
+        }
+
+        .order-code {
+            font-weight: bold;
+        }
+
+        .payment-methods img {
+            width: 50px;
+            margin-right: 10px;
         }
     </style>
 </head>
+
 <body>
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Restaurants Pointe-Noire</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -56,21 +171,93 @@
         </div>
     </nav>
 
+    <!-- Hero Section with Video Background -->
+    <div class="hero">
+        <video class="video-background" autoplay muted loop>
+            <source src="https://www.w3schools.com/tags/movie.mp4" type="video/mp4">
+        </video>
+        <h1 class="text-center">Bienvenue sur la plateforme de commande en ligne</h1>
+    </div>
+
     <!-- Main Content -->
     <div class="container mt-5">
-        <h1 class="text-center text-4xl font-bold mb-8">Bienvenue sur la plateforme de commande en ligne</h1>
-        <p class="text-center text-lg mb-5">Facilitez vos commandes en ligne dans les meilleurs restaurants de Pointe-Noire.</p>
+        <p class="text-center text-lg mb-5">Facilitez vos commandes en ligne dans les meilleurs restaurants de
+            Pointe-Noire.</p>
 
         <!-- Search Bar -->
         <div class="row mb-4">
-            <div class="col-md-8 offset-md-2">
+            <div class="col-md-8 offset-md-2 search-bar">
                 <input type="text" class="form-control" id="search-bar" placeholder="Rechercher un restaurant...">
+                <i class="fas fa-search"></i>
             </div>
         </div>
 
         <!-- Restaurant List -->
         <div id="restaurant-list" class="row">
             <!-- Les cartes des restaurants seront injectées ici par JavaScript -->
+        </div>
+    </div>
+
+    <!-- Restaurant Details Modal -->
+    <div class="modal fade" id="restaurantModal" tabindex="-1" role="dialog" aria-labelledby="restaurantModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="restaurantModalLabel">Détails du restaurant</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="" alt="" class="img-fluid mb-3" id="restaurantImage">
+                    <h5 id="restaurantName"></h5>
+                    <p id="restaurantDescription"></p>
+                    <h6>Menu</h6>
+                    <ul id="restaurantMenu">
+                        <!-- Les éléments du menu seront injectés ici par JavaScript -->
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="orderButton">Commander</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Summary Modal -->
+    <div class="modal fade" id="orderSummaryModal" tabindex="-1" role="dialog" aria-labelledby="orderSummaryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderSummaryModalLabel">Résumé de la commande</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5>Commande pour <span id="orderRestaurantName"></span></h5>
+                    <div class="order-summary">
+                        <h6>Articles commandés</h6>
+                        <ul id="orderItems">
+                            <!-- Les articles commandés seront injectés ici par JavaScript -->
+                        </ul>
+                    </div>
+                    <p class="order-code">Code de commande : <span id="orderCode"></span></p>
+                    <div class="payment-methods">
+                        <h6>Méthodes de paiement</h6>
+                        <img src="https://via.placeholder.com/50" alt="Visa">
+                        <img src="https://via.placeholder.com/50" alt="MasterCard">
+                        <img src="https://via.placeholder.com/50" alt="PayPal">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="confirmOrderButton">Confirmer la commande</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -89,27 +276,27 @@
     <script>
         // Custom JS
 
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const restaurantList = document.getElementById("restaurant-list");
             const searchBar = document.getElementById("search-bar");
 
             // Sample data for restaurants
             const restaurants = [
-                { 
-                    name: "La Citronnelle", 
-                    description: "La Citronnelle est une pâtisserie artisanale créer en 1999 à Pointe-noire. Après la guerre de 1998 à Brazzaville, le CEO de la mandarine pensa à créer une deuxième pâtisserie dans la capitale économique. Créateurs de goûts, toujours à la recherche de nouvelles sensations gustatives, la citronnelle a une vitrine variée de produits: viennoiseries, pâtisseries, chocolats, macarons, glaces, crêpes, fast-food variés tels que sandwiches, burgers, salades, pizza, galettes bretonnes, omelettes ... La citronnelle est un endroit convivial, familial, idéal pour vos rencontres professionnelles ou amicales. Une équipe professionnelle vous attend afin de bien vous servir. Merci, à très vite!", 
+                {
+                    name: "La Citronnelle",
+                    description: "La Citronnelle est une pâtisserie artisanale créer en 1999 à Pointe-noire. Après la guerre de 1998 à Brazzaville, le CEO de la mandarine pensa à créer une deuxième pâtisserie dans la capitale économique. Créateurs de goûts, toujours à la recherche de nouvelles sensations gustatives, la citronnelle a une vitrine variée de produits: viennoiseries, pâtisseries, chocolats, macarons, glaces, crêpes, fast-food variés tels que sandwiches, burgers, salades, pizza, galettes bretonnes, omelettes ... La citronnelle est un endroit convivial, familial, idéal pour vos rencontres professionnelles ou amicales. Une équipe professionnelle vous attend afin de bien vous servir. Merci, à très vite!",
                     image: "https://via.placeholder.com/150",
                     menu: ["Viennoiseries", "Pâtisseries", "Chocolats", "Macarons", "Glaces", "Crêpes", "Fast-food"]
                 },
-                { 
-                    name: "L’Arbalète", 
-                    description: "Un petit bar pour boire l’apéritif, deux petites salles boisées à la décoration délicieusement rétro pour passer à table... et tout y est: une belle carte de cuisine française traditionnelle où se côtoient cailles, magrets, foie gras, cuisses de grenouilles ou sole aux amandes. Autre spécialité de la maison: le gratin de papaye, un véritable délice. A ce ravissement s'ajoute une carte des vins avenante et la gentillesse des propriétaires. L’Arbalète mérite sa réputation d'être l'un des meilleurs restaurants de Pointe-Noire, sans pour autant casser sa tirelire.", 
+                {
+                    name: "L’Arbalète",
+                    description: "Un petit bar pour boire l’apéritif, deux petites salles boisées à la décoration délicieusement rétro pour passer à table... et tout y est: une belle carte de cuisine française traditionnelle où se côtoient cailles, magrets, foie gras, cuisses de grenouilles ou sole aux amandes. Autre spécialité de la maison: le gratin de papaye, un véritable délice. A ce ravissement s'ajoute une carte des vins avenante et la gentillesse des propriétaires. L’Arbalète mérite sa réputation d'être l'un des meilleurs restaurants de Pointe-Noire, sans pour autant casser sa tirelire.",
                     image: "https://via.placeholder.com/150",
                     menu: ["Cailles", "Magrets", "Foie gras", "Cuisses de grenouilles", "Sole aux amandes", "Gratin de papaye"]
                 },
-                { 
-                    name: "La Voile Blanche", 
-                    description: "De par sa situation et sa déco chic, la Voile Blanche a très vite fait sa place à Pointe-Noire. Une immense terrasse abritée accueille un grand bar, plusieurs coins canapés et un espace restaurant. La vue sur l'océan fait de ce lieu un endroit particulièrement plaisant. La carte des cocktails est intéressante, ainsi que celle du restaurant. Cette dernière met à l'honneur les produits de la mer, comme la langouste grillée, le poisson frais et les crevettes. Les plats sont bien préparés et la présentation soignée. Une adresse à découvrir.", 
+                {
+                    name: "La Voile Blanche",
+                    description: "De par sa situation et sa déco chic, la Voile Blanche a très vite fait sa place à Pointe-Noire. Une immense terrasse abritée accueille un grand bar, plusieurs coins canapés et un espace restaurant. La vue sur l'océan fait de ce lieu un endroit particulièrement plaisant. La carte des cocktails est intéressante, ainsi que celle du restaurant. Cette dernière met à l'honneur les produits de la mer, comme la langouste grillée, le poisson frais et les crevettes. Les plats sont bien préparés et la présentation soignée. Une adresse à découvrir.",
                     image: "https://via.placeholder.com/150",
                     menu: ["Langouste grillée", "Poisson frais", "Crevettes"]
                 }
@@ -120,17 +307,13 @@
                 restaurantList.innerHTML = "";
                 restaurants.forEach(restaurant => {
                     const card = document.createElement("div");
-                    card.className = "col-md-4";
+                    card.className = "col-md-4 mb-4";
                     card.innerHTML = `
-                        <div class="card">
-                            <img src="${restaurant.image}" class="card-img-top" alt="${restaurant.name}">
+                        <div class="card shadow-sm">
+                            <img src="${restaurant.image}" class="card-img-top restaurant-image" alt="${restaurant.name}" data-toggle="modal" data-target="#restaurantModal" data-name="${restaurant.name}" data-description="${restaurant.description}" data-menu='${JSON.stringify(restaurant.menu)}' data-image="${restaurant.image}">
                             <div class="card-body">
                                 <h5 class="card-title">${restaurant.name}</h5>
                                 <p class="card-text">${restaurant.description}</p>
-                                <ul class="list-group list-group-flush">
-                                    ${restaurant.menu.map(item => `<li class="list-group-item">${item}</li>`).join('')}
-                                </ul>
-                                <a href="#" class="btn btn-primary mt-3">Commander</a>
                             </div>
                         </div>
                     `;
@@ -142,7 +325,7 @@
             displayRestaurants(restaurants);
 
             // Filter restaurants based on search input
-            searchBar.addEventListener("input", function() {
+            searchBar.addEventListener("input", function () {
                 const query = searchBar.value.toLowerCase();
                 const filteredRestaurants = restaurants.filter(restaurant =>
                     restaurant.name.toLowerCase().includes(query) ||
@@ -150,7 +333,60 @@
                 );
                 displayRestaurants(filteredRestaurants);
             });
+
+            // Show restaurant details in modal
+            $('#restaurantModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var name = button.data('name');
+                var description = button.data('description');
+                var menu = button.data('menu');
+                var image = button.data('image');
+
+                var modal = $(this);
+                modal.find('#restaurantName').text(name);
+                modal.find('#restaurantDescription').text(description);
+                modal.find('#restaurantImage').attr('src', image);
+
+                var menuList = modal.find('#restaurantMenu');
+                menuList.empty();
+                menu.forEach(item => {
+                    menuList.append('<li class="menu-item">' + item + '</li>');
+                });
+
+                // Store the current restaurant's name for the order summary
+                $('#orderButton').data('restaurant-name', name);
+            });
+
+            // Show order summary in modal
+            $('#orderButton').on('click', function () {
+                var restaurantName = $(this).data('restaurant-name');
+                $('#orderRestaurantName').text(restaurantName);
+
+                var orderItems = $('#restaurantMenu .menu-item').map(function () {
+                    return $(this).text();
+                }).get();
+
+                var orderItemsList = $('#orderItems');
+                orderItemsList.empty();
+                orderItems.forEach(item => {
+                    orderItemsList.append('<li>' + item + '</li>');
+                });
+
+                // Generate a random order code
+                var orderCode = 'ORD' + Math.floor(Math.random() * 1000000);
+                $('#orderCode').text(orderCode);
+
+                $('#restaurantModal').modal('hide');
+                $('#orderSummaryModal').modal('show');
+            });
+
+            // Confirm order
+            $('#confirmOrderButton').on('click', function () {
+                alert('Votre commande a été confirmée !');
+                $('#orderSummaryModal').modal('hide');
+            });
         });
     </script>
 </body>
+
 </html>
